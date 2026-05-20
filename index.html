@@ -113,7 +113,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* Çarpı Butonu - Artık ekrana sabitlendi */
         .close-btn {
             position: fixed;
             top: 20px;
@@ -125,7 +124,7 @@
             transition: transform 0.2s;
             line-height: 1;
             text-shadow: 3px 3px 0px #2f3542;
-            z-index: 1001; /* Her şeyin üstünde kalması için yüksek değer */
+            z-index: 1001; 
         }
 
         .close-btn:hover {
@@ -140,7 +139,7 @@
             border: 6px solid #2f3542;
             border-radius: 20px;
             box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
-            padding: 40px; 
+            padding: 60px 40px 40px 40px; 
             position: relative;
             display: flex;
             flex-direction: column;
@@ -160,6 +159,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+        }
+
+        /* Kusursuz yatay ortalama için her slayt verisini flex yapıyoruz */
+        .slide-data {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-content h2 {
@@ -173,6 +182,7 @@
             border: 3px solid #2f3542;
             border-radius: 15px;
             transform: rotate(-1deg);
+            display: inline-block;
         }
 
         .modal-content p, .modal-content li {
@@ -185,6 +195,7 @@
             border-radius: 15px;
             box-shadow: 4px 4px 0px rgba(47, 53, 66, 0.2);
             margin-top: 15px;
+            box-sizing: border-box;
         }
 
         .modal-content ul {
@@ -202,7 +213,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px 0;
+            margin: 20px auto; /* Üst-alt pay bırakıp sağdan soldan otomatik ortalar */
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 5px 5px 0px #2f3542;
@@ -220,7 +231,7 @@
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* MOBİL UYUM (RESPONSIVE) AYARLARI */
+        /* DİKEY MOBİL AYARLARI */
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.2rem;
@@ -232,10 +243,10 @@
             .modal-content {
                 width: 95vw;
                 height: 90vh;
-                padding: 30px 15px;
+                padding: 50px 15px 20px 15px;
             }
             .image-box {
-                width: 100%; /* Resim kutusu mobilde tam genişlik alır */
+                width: 100%; 
                 height: 30vh;
             }
             .modal-content h2 {
@@ -249,6 +260,40 @@
                 top: 10px;
                 right: 15px;
                 font-size: 45px;
+            }
+        }
+
+        /* YATAY MOBİL / DÜŞÜK EKRAN YÜKSEKLİĞİ OPTİMİZASYONU */
+        @media (max-height: 550px) {
+            .modal-content {
+                height: 92vh;
+                width: 95vw;
+                padding: 60px 20px 20px 20px;
+                justify-content: flex-start; /* İçeriğin kaydırılabilmesi için üstten başlatır */
+            }
+            #modalBody {
+                margin: 0; /* Otomatik dikey ortalamayı kaldırıp sıkışmayı önler */
+            }
+            .image-box {
+                height: 160px; /* Sabit vh yerine basık ekranda taşmayan makul piksel yüksekliği */
+                width: auto;
+                max-width: 90%;
+                margin: 10px auto;
+            }
+            .modal-content h2 {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
+                padding: 5px 15px;
+            }
+            .modal-content p, .modal-content li {
+                font-size: 1.2rem;
+                margin-top: 10px;
+                padding: 8px 12px;
+            }
+            .close-btn {
+                top: 5px;
+                right: 15px;
+                font-size: 40px;
             }
         }
     </style>
@@ -360,16 +405,36 @@
             grid.appendChild(thumbBox);
         });
 
+        // MOBİL GERİ TUŞU DESTEKLİ MODAL AÇMA FONKSİYONU
         function openModal(index) {
             modalBody.innerHTML = '';
             const slideContent = slides[index].cloneNode(true);
             modalBody.appendChild(slideContent);
             modal.style.display = 'flex';
+            
+            // Slayt açıldığında tarayıcı geçmişine sanal bir durum ekliyoruz
+            if (!history.state || !history.state.modalOpen) {
+                history.pushState({ modalOpen: true }, "");
+            }
         }
 
+        // MODAL KAPATMA FONKSİYONU
         function closeModal() {
-            modal.style.display = 'none';
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+                // Eğer çarpı ile kapatıldıysa geçmiş durumunu temizlemek için geri gidiyoruz
+                if (history.state && history.state.modalOpen) {
+                    history.back();
+                }
+            }
         }
+
+        // Telefonda fiziksel veya sistemsel GERİ tuşuna basıldığında tetiklenen alan
+        window.addEventListener('popstate', function(event) {
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none'; // Sadece pencereyi kapat, sayfadan çıkma
+            }
+        });
 
         window.onclick = function(event) {
             if (event.target == modal) {
