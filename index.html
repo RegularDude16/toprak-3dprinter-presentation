@@ -113,25 +113,6 @@
             backdrop-filter: blur(4px);
         }
 
-        .close-btn {
-            position: fixed;
-            top: 20px;
-            right: 30px;
-            font-size: 60px;
-            color: #ff4757;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s;
-            line-height: 1;
-            text-shadow: 3px 3px 0px #2f3542;
-            z-index: 1001; 
-        }
-
-        .close-btn:hover {
-            transform: scale(1.1) rotate(10deg);
-            color: #ff6b81;
-        }
-
         .modal-content {
             background-color: #fff9e6;
             width: 85vw;
@@ -139,8 +120,9 @@
             border: 6px solid #2f3542;
             border-radius: 20px;
             box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
-            padding: 60px 40px 40px 40px; 
-            position: relative;
+            /* Üst padding çarpı işareti için yer açmak adına 70px yapıldı */
+            padding: 70px 40px 40px 40px; 
+            position: relative; /* İçindeki absolute elemanlar (çarpı) için referans */
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
@@ -148,9 +130,29 @@
             text-align: center;
             box-sizing: border-box;
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow-y: auto;
+            overflow-y: auto; /* İçerik taşarsa kutu içinde scroll olsun */
             background-image: radial-gradient(#ffeaa7 15%, transparent 16%);
             background-size: 20px 20px;
+        }
+
+        /* Çarpı Butonu - Artık sunum kutusunun İÇİNDE sabit */
+        .close-btn {
+            position: absolute; /* Kutuya (modal-content) göre konumlan */
+            top: 20px;
+            right: 25px;
+            font-size: 55px;
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            line-height: 1;
+            text-shadow: 2px 2px 0px #2f3542;
+            z-index: 10; /* İçeriklerin üstünde kalsın */
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            color: #ff6b81;
         }
 
         #modalBody {
@@ -162,7 +164,6 @@
             justify-content: center;
         }
 
-        /* Kusursuz yatay ortalama için her slayt verisini flex yapıyoruz */
         .slide-data {
             width: 100%;
             display: flex;
@@ -213,7 +214,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px auto; /* Üst-alt pay bırakıp sağdan soldan otomatik ortalar */
+            margin: 20px auto;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 5px 5px 0px #2f3542;
@@ -223,7 +224,8 @@
         .image-box img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            /* ZOOM SORUNU DÜZELTİLDİ: contain yapıldı, resim kesilmez, sığar */
+            object-fit: contain; 
         }
 
         @keyframes popIn {
@@ -235,7 +237,6 @@
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.2rem;
-                text-shadow: 2px 2px 0 #2f3542, -1px -1px 0 #2f3542, 1px -1px 0 #2f3542, -1px 1px 0 #2f3542, 1px 1px 0 #2f3542;
             }
             .header p {
                 font-size: 1rem;
@@ -243,7 +244,8 @@
             .modal-content {
                 width: 95vw;
                 height: 90vh;
-                padding: 50px 15px 20px 15px;
+                /* Mobilde çarpı için biraz daha yer bırakalım */
+                padding: 60px 15px 20px 15px;
             }
             .image-box {
                 width: 100%; 
@@ -257,8 +259,8 @@
                 padding: 10px;
             }
             .close-btn {
-                top: 10px;
-                right: 15px;
+                top: 15px;
+                right: 20px;
                 font-size: 45px;
             }
         }
@@ -269,30 +271,26 @@
                 height: 92vh;
                 width: 95vw;
                 padding: 60px 20px 20px 20px;
-                justify-content: flex-start; /* İçeriğin kaydırılabilmesi için üstten başlatır */
+                justify-content: flex-start; 
             }
             #modalBody {
-                margin: 0; /* Otomatik dikey ortalamayı kaldırıp sıkışmayı önler */
+                margin: 0; 
             }
             .image-box {
-                height: 160px; /* Sabit vh yerine basık ekranda taşmayan makul piksel yüksekliği */
+                height: 160px; 
                 width: auto;
                 max-width: 90%;
                 margin: 10px auto;
             }
             .modal-content h2 {
                 font-size: 1.8rem;
-                margin-bottom: 10px;
-                padding: 5px 15px;
             }
             .modal-content p, .modal-content li {
                 font-size: 1.2rem;
-                margin-top: 10px;
-                padding: 8px 12px;
             }
             .close-btn {
-                top: 5px;
-                right: 15px;
+                top: 10px;
+                right: 20px;
                 font-size: 40px;
             }
         }
@@ -309,8 +307,8 @@
         </div>
 
     <div id="myModal" class="modal">
-        <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
         <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
             <div id="modalBody">
                 </div>
         </div>
@@ -405,34 +403,29 @@
             grid.appendChild(thumbBox);
         });
 
-        // MOBİL GERİ TUŞU DESTEKLİ MODAL AÇMA FONKSİYONU
         function openModal(index) {
             modalBody.innerHTML = '';
             const slideContent = slides[index].cloneNode(true);
             modalBody.appendChild(slideContent);
             modal.style.display = 'flex';
             
-            // Slayt açıldığında tarayıcı geçmişine sanal bir durum ekliyoruz
             if (!history.state || !history.state.modalOpen) {
                 history.pushState({ modalOpen: true }, "");
             }
         }
 
-        // MODAL KAPATMA FONKSİYONU
         function closeModal() {
             if (modal.style.display === 'flex') {
                 modal.style.display = 'none';
-                // Eğer çarpı ile kapatıldıysa geçmiş durumunu temizlemek için geri gidiyoruz
                 if (history.state && history.state.modalOpen) {
                     history.back();
                 }
             }
         }
 
-        // Telefonda fiziksel veya sistemsel GERİ tuşuna basıldığında tetiklenen alan
         window.addEventListener('popstate', function(event) {
             if (modal.style.display === 'flex') {
-                modal.style.display = 'none'; // Sadece pencereyi kapat, sayfadan çıkma
+                modal.style.display = 'none';
             }
         });
 
