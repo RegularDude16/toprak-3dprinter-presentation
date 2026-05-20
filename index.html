@@ -113,6 +113,26 @@
             backdrop-filter: blur(4px);
         }
 
+        /* Çarpı Butonu - Artık ekrana sabitlendi */
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 60px;
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            line-height: 1;
+            text-shadow: 3px 3px 0px #2f3542;
+            z-index: 1001; /* Her şeyin üstünde kalması için yüksek değer */
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            color: #ff6b81;
+        }
+
         .modal-content {
             background-color: #fff9e6;
             width: 85vw;
@@ -120,12 +140,10 @@
             border: 6px solid #2f3542;
             border-radius: 20px;
             box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
-            /* Üst boşluk (padding-top) 40px'den 80px'e çıkarıldı */
-            padding: 80px 40px 40px 40px; 
+            padding: 40px; 
             position: relative;
             display: flex;
             flex-direction: column;
-            /* İçeriğin yukarı taşmasını engellemek için flex-start yapıldı */
             justify-content: flex-start; 
             align-items: center;
             text-align: center;
@@ -137,30 +155,11 @@
         }
 
         #modalBody {
-            /* İçeriği dikey olarak ortalar ama yukarı taşırmaz */
             margin: auto 0; 
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 50px;
-            color: #ff4757;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.2s;
-            line-height: 1;
-            text-shadow: 2px 2px 0px #2f3542;
-            z-index: 10; /* Çarpı butonunun her zaman en üstte kalmasını sağlar */
-        }
-
-        .close-btn:hover {
-            transform: scale(1.2) rotate(10deg);
         }
 
         .modal-content h2 {
@@ -220,6 +219,38 @@
             from { transform: scale(0.7) rotate(-5deg); opacity: 0; }
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
+
+        /* MOBİL UYUM (RESPONSIVE) AYARLARI */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2rem;
+                text-shadow: 2px 2px 0 #2f3542, -1px -1px 0 #2f3542, 1px -1px 0 #2f3542, -1px 1px 0 #2f3542, 1px 1px 0 #2f3542;
+            }
+            .header p {
+                font-size: 1rem;
+            }
+            .modal-content {
+                width: 95vw;
+                height: 90vh;
+                padding: 30px 15px;
+            }
+            .image-box {
+                width: 100%; /* Resim kutusu mobilde tam genişlik alır */
+                height: 30vh;
+            }
+            .modal-content h2 {
+                font-size: 2rem;
+            }
+            .modal-content p, .modal-content li {
+                font-size: 1.3rem;
+                padding: 10px;
+            }
+            .close-btn {
+                top: 10px;
+                right: 15px;
+                font-size: 45px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -230,19 +261,16 @@
     </div>
 
     <div class="grid-container" id="grid">
-        <!-- JavaScript ile otomatik doldurulacak -->
-    </div>
+        </div>
 
     <div id="myModal" class="modal">
+        <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
             <div id="modalBody">
-                <!-- Seçilen slayt buraya gelecek -->
-            </div>
+                </div>
         </div>
     </div>
 
-    <!-- Slaytların Asıl İçerikleri -->
     <template id="slidesTemplate">
         
         <div class="slide-data" data-title="1. Kapak" data-emoji="🌟">
@@ -314,46 +342,4 @@
         const modal = document.getElementById('myModal');
         const modalBody = document.getElementById('modalBody');
 
-        slides.forEach((slide, index) => {
-            const thumbBox = document.createElement('div');
-            thumbBox.className = 'thumb';
-            
-            const title = document.createElement('h3');
-            title.textContent = slide.getAttribute('data-title');
-            
-            const icon = document.createElement('div');
-            icon.className = 'thumb-icon';
-            icon.innerHTML = slide.getAttribute('data-emoji');
-
-            thumbBox.appendChild(title);
-            thumbBox.appendChild(icon);
-
-            thumbBox.onclick = () => openModal(index);
-            grid.appendChild(thumbBox);
-        });
-
-        function openModal(index) {
-            modalBody.innerHTML = '';
-            const slideContent = slides[index].cloneNode(true);
-            modalBody.appendChild(slideContent);
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-        
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeModal();
-            }
-        });
-    </script>
-</body>
-</html>
+        slides.forEach((slide, index
