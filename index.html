@@ -342,4 +342,46 @@
         const modal = document.getElementById('myModal');
         const modalBody = document.getElementById('modalBody');
 
-        slides.forEach((slide, index
+        slides.forEach((slide, index) => {
+            const thumbBox = document.createElement('div');
+            thumbBox.className = 'thumb';
+            
+            const title = document.createElement('h3');
+            title.textContent = slide.getAttribute('data-title');
+            
+            const icon = document.createElement('div');
+            icon.className = 'thumb-icon';
+            icon.innerHTML = slide.getAttribute('data-emoji');
+
+            thumbBox.appendChild(title);
+            thumbBox.appendChild(icon);
+
+            thumbBox.onclick = () => openModal(index);
+            grid.appendChild(thumbBox);
+        });
+
+        function openModal(index) {
+            modalBody.innerHTML = '';
+            const slideContent = slides[index].cloneNode(true);
+            modalBody.appendChild(slideContent);
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
