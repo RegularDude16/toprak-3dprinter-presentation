@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Yazıcılar Nasıl Çalışır? - Toprak</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+        body {
+            font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+            background-color: #dcb883; 
+            background-image: 
+                radial-gradient(#c49e66 10%, transparent 11%),
+                radial-gradient(#c49e66 10%, transparent 11%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            color: #2f3542;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            margin-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            color: #ff4757;
+            text-shadow: 3px 3px 0 #2f3542, -2px -2px 0 #2f3542, 2px -2px 0 #2f3542, -2px 2px 0 #2f3542, 2px 2px 0 #2f3542;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .header p {
+            background: #ffffff;
+            display: inline-block;
+            padding: 8px 20px;
+            border: 3px solid #2f3542;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #3742fa;
+            box-shadow: 4px 4px 0px #2f3542;
+            transform: rotate(-1deg);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .thumb {
+            background-color: #ffffff;
+            border: 4px solid #2f3542;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 6px 6px 0px #2f3542;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 150px;
+            transform: rotate(-1deg);
+        }
+
+        .thumb:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .thumb:hover {
+            transform: scale(1.05) rotate(0deg);
+            box-shadow: 8px 8px 0px #2f3542;
+        }
+
+        .thumb:nth-child(1) h3 { color: #ff4757; } 
+        .thumb:nth-child(2) h3 { color: #1e90ff; } 
+        .thumb:nth-child(3) h3 { color: #2ed573; } 
+        .thumb:nth-child(4) h3 { color: #ffa502; } 
+        .thumb:nth-child(5) h3 { color: #9c88ff; } 
+        .thumb:nth-child(6) h3 { color: #ff6b81; } 
+        .thumb:nth-child(7) h3 { color: #00d2d3; } 
+
+        .thumb h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.6rem;
+            text-shadow: 1px 1px 0px #2f3542;
+        }
+
+        .thumb-icon {
+            font-size: 2.5rem;
+            margin-top: 10px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(47, 53, 66, 0.9);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background-color: #fff9e6;
+            width: 85vw;
+            height: 85vh;
+            border: 6px solid #2f3542;
+            border-radius: 20px;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
+            /* Üst boşluk (padding-top) 40px'den 80px'e çıkarıldı */
+            padding: 80px 40px 40px 40px; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            /* İçeriğin yukarı taşmasını engellemek için flex-start yapıldı */
+            justify-content: flex-start; 
+            align-items: center;
+            text-align: center;
+            box-sizing: border-box;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow-y: auto;
+            background-image: radial-gradient(#ffeaa7 15%, transparent 16%);
+            background-size: 20px 20px;
+        }
+
+        #modalBody {
+            /* İçeriği dikey olarak ortalar ama yukarı taşırmaz */
+            margin: auto 0; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 50px;
+            color: #ff4757;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+            line-height: 1;
+            text-shadow: 2px 2px 0px #2f3542;
+            z-index: 10; /* Çarpı butonunun her zaman en üstte kalmasını sağlar */
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .modal-content h2 {
+            font-size: 3.2rem;
+            color: #3742fa;
+            text-shadow: 2px 2px 0px #2f3542;
+            margin-top: 0;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px 20px;
+            border: 3px solid #2f3542;
+            border-radius: 15px;
+            transform: rotate(-1deg);
+        }
+
+        .modal-content p, .modal-content li {
+            font-size: 1.8rem;
+            max-width: 800px;
+            line-height: 1.6;
+            background: white;
+            padding: 10px 20px;
+            border: 3px solid #2f3542;
+            border-radius: 15px;
+            box-shadow: 4px 4px 0px rgba(47, 53, 66, 0.2);
+            margin-top: 15px;
+        }
+
+        .modal-content ul {
+            text-align: left;
+            margin-top: 10px;
+            display: inline-block;
+            padding-left: 40px;
+        }
+
+        .image-box {
+            width: 60%;
+            height: 40vh;
+            background-color: #ffffff;
+            border: 5px dashed #ffa502;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 5px 5px 0px #2f3542;
+            transform: rotate(1deg);
+        }
+
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.7) rotate(-5deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>3D YAZICILAR NASIL ÇALIŞIR?</h1>
+        <p>Büyütmek için kutucuklara tıkla! 🚀</p>
+    </div>
+
+    <div class="grid-container" id="grid">
+        <!-- JavaScript ile otomatik doldurulacak -->
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
+            <div id="modalBody">
+                <!-- Seçilen slayt buraya gelecek -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Slaytların Asıl İçerikleri -->
+    <template id="slidesTemplate">
+        
+        <div class="slide-data" data-title="1. Kapak" data-emoji="🌟">
+            <h2>3D Yazıcılar Nasıl Çalışır?</h2>
+            <div class="image-box">
+                <img src="sunumResimler/1.jpg" alt="3D Yazıcı">
+            </div>
+            <p><strong>Hazırlayan: Toprak</strong> 👦🏻</p>
+        </div>
+
+        <div class="slide-data" data-title="2. Nedir?" data-emoji="🤔">
+            <h2>3D Yazıcı Nedir?</h2>
+            <div class="image-box">
+                <img src="sunumResimler/2.jpg" alt="3D Model">
+            </div>
+            <p>Bilgisayarda çizdiğimiz dijital tasarımları, dokunabildiğimiz gerçek nesnelere dönüştüren sihirli kutulardır.</p>
+        </div>
+
+        <div class="slide-data" data-title="3. Tasarım" data-emoji="💻">
+            <h2>1. Adım: Hayal Et ve Çiz!</h2>
+            <div class="image-box">
+                <img src="sunumResimler/3.jpg" alt="3D Tasarım Programı">
+            </div>
+            <p>Her şey bilgisayarda bir 3D çizim ile başlar. Bunun için özel modelleme programları kullanılır.</p>
+        </div>
+
+        <div class="slide-data" data-title="4. Dilimleme" data-emoji="🍰">
+            <h2>2. Adım: Dilimleme (Slicing)</h2>
+            <div class="image-box">
+                <img src="sunumResimler/4.jpg" alt="3D Dilimleme Yazılımı">
+            </div>
+            <p>Yazıcılar nesneleri tek seferde değil, <strong>katman katman</strong> inşa eder. Modeli bilgisayarda ince dilimlere ayırırız.</p>
+        </div>
+
+        <div class="slide-data" data-title="5. Baskı" data-emoji="⚙️">
+            <h2>3. Adım: Üretim Başlıyor</h2>
+            <div class="image-box">
+                <img src="sunumResimler/5.jpg" alt="3D Yazıcı Ucu (Nozzle)">
+            </div>
+            <ul>
+                <li>Plastik ip (filament) ısıtılarak eritilir. 🔥</li>
+                <li>Sıcak uç (nozul) erimiş plastiği masaya sürer.</li>
+                <li>Plastik anında soğur ve nesne yükselir. 🏗️</li>
+            </ul>
+        </div>
+
+        <div class="slide-data" data-title="6. Örnekler" data-emoji="🚀">
+            <h2>Neler Üretebiliriz?</h2>
+            <div class="image-box">
+                <img src="sunumResimler/6.jpg" alt="3D Baskı Oyuncaklar">
+            </div>
+            <p>Sınır hayal gücümüz! Oyuncaklar, robotlar, bozulan eşya parçaları ve hatta medikal protezler basılabilir.</p>
+        </div>
+
+        <div class="slide-data" data-title="7. Teşekkürler" data-emoji="🎉">
+            <h2>Beni Dinlediğiniz İçin Teşekkürler!</h2>
+            <div class="image-box">
+                <img src="sunumResimler/7.jpg" alt="Eğlenceli 3D Baskı Obje">
+            </div>
+            <p><strong>Sorularınız var mı?</strong> 🙋‍♂️</p>
+        </div>
+
+    </template>
+
+    <script>
+        const template = document.getElementById('slidesTemplate');
+        const slides = template.content.querySelectorAll('.slide-data');
+        const grid = document.getElementById('grid');
+        const modal = document.getElementById('myModal');
+        const modalBody = document.getElementById('modalBody');
+
+        slides.forEach((slide, index) => {
+            const thumbBox = document.createElement('div');
+            thumbBox.className = 'thumb';
+            
+            const title = document.createElement('h3');
+            title.textContent = slide.getAttribute('data-title');
+            
+            const icon = document.createElement('div');
+            icon.className = 'thumb-icon';
+            icon.innerHTML = slide.getAttribute('data-emoji');
+
+            thumbBox.appendChild(title);
+            thumbBox.appendChild(icon);
+
+            thumbBox.onclick = () => openModal(index);
+            grid.appendChild(thumbBox);
+        });
+
+        function openModal(index) {
+            modalBody.innerHTML = '';
+            const slideContent = slides[index].cloneNode(true);
+            modalBody.appendChild(slideContent);
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
