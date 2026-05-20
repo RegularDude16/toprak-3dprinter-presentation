@@ -120,9 +120,8 @@
             border: 6px solid #2f3542;
             border-radius: 20px;
             box-shadow: 15px 15px 0px rgba(0,0,0,0.5);
-            /* Üst padding çarpı işareti için yer açmak adına 70px yapıldı */
             padding: 70px 40px 40px 40px; 
-            position: relative; /* İçindeki absolute elemanlar (çarpı) için referans */
+            position: relative; 
             display: flex;
             flex-direction: column;
             justify-content: flex-start; 
@@ -130,14 +129,13 @@
             text-align: center;
             box-sizing: border-box;
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            overflow-y: auto; /* İçerik taşarsa kutu içinde scroll olsun */
+            overflow-y: auto; 
             background-image: radial-gradient(#ffeaa7 15%, transparent 16%);
             background-size: 20px 20px;
         }
 
-        /* Çarpı Butonu - Artık sunum kutusunun İÇİNDE sabit */
         .close-btn {
-            position: absolute; /* Kutuya (modal-content) göre konumlan */
+            position: absolute; 
             top: 20px;
             right: 25px;
             font-size: 55px;
@@ -147,7 +145,7 @@
             transition: transform 0.2s;
             line-height: 1;
             text-shadow: 2px 2px 0px #2f3542;
-            z-index: 10; /* İçeriklerin üstünde kalsın */
+            z-index: 10; 
         }
 
         .close-btn:hover {
@@ -177,7 +175,7 @@
             color: #3742fa;
             text-shadow: 2px 2px 0px #2f3542;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             background: white;
             padding: 10px 20px;
             border: 3px solid #2f3542;
@@ -186,35 +184,25 @@
             display: inline-block;
         }
 
-        .modal-content p, .modal-content li {
-            font-size: 1.8rem;
-            max-width: 800px;
-            line-height: 1.6;
-            background: white;
-            padding: 10px 20px;
-            border: 3px solid #2f3542;
-            border-radius: 15px;
-            box-shadow: 4px 4px 0px rgba(47, 53, 66, 0.2);
-            margin-top: 15px;
-            box-sizing: border-box;
-        }
-
-        .modal-content ul {
-            text-align: left;
-            margin-top: 10px;
-            display: inline-block;
-            padding-left: 40px;
+        /* --- İKİ SÜTUNLU YAPI (MASAÜSTÜ İÇİN YENİ) --- */
+        .content-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            max-width: 1100px;
         }
 
         .image-box {
-            width: 60%;
-            height: 40vh;
+            flex: 1; /* Sol sütun */
+            height: 45vh;
             background-color: #ffffff;
             border: 5px dashed #ffa502;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 20px auto;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 5px 5px 0px #2f3542;
@@ -224,8 +212,39 @@
         .image-box img {
             width: 100%;
             height: 100%;
-            /* ZOOM SORUNU DÜZELTİLDİ: contain yapıldı, resim kesilmez, sığar */
             object-fit: contain; 
+        }
+
+        .text-box {
+            flex: 1; /* Sağ sütun */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .text-box p, .text-box ul {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            background: white;
+            padding: 25px 30px;
+            border: 3px solid #2f3542;
+            border-radius: 15px;
+            box-shadow: 4px 4px 0px rgba(47, 53, 66, 0.2);
+            margin: 0;
+            text-align: left;
+            box-sizing: border-box;
+        }
+
+        .text-box ul {
+            padding-left: 50px;
+        }
+
+        .text-box li {
+            margin-bottom: 12px;
+        }
+
+        .text-box li:last-child {
+            margin-bottom: 0;
         }
 
         @keyframes popIn {
@@ -233,30 +252,30 @@
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* DİKEY MOBİL AYARLARI */
+        /* --- DİKEY MOBİL AYARLARI (ALT ALTA YAPI) --- */
         @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            .header p {
-                font-size: 1rem;
-            }
+            .header h1 { font-size: 2.2rem; }
+            .header p { font-size: 1rem; }
             .modal-content {
                 width: 95vw;
                 height: 90vh;
-                /* Mobilde çarpı için biraz daha yer bırakalım */
                 padding: 60px 15px 20px 15px;
+            }
+            .modal-content h2 { font-size: 2rem; margin-bottom: 20px; }
+            
+            /* Mobilde alt alta geçiş */
+            .content-wrapper {
+                flex-direction: column;
+                gap: 20px;
             }
             .image-box {
                 width: 100%; 
-                height: 30vh;
+                height: 35vh;
             }
-            .modal-content h2 {
-                font-size: 2rem;
-            }
-            .modal-content p, .modal-content li {
-                font-size: 1.3rem;
-                padding: 10px;
+            .text-box { width: 100%; }
+            .text-box p, .text-box ul {
+                font-size: 1.4rem;
+                padding: 15px 20px;
             }
             .close-btn {
                 top: 15px;
@@ -265,28 +284,31 @@
             }
         }
 
-        /* YATAY MOBİL / DÜŞÜK EKRAN YÜKSEKLİĞİ OPTİMİZASYONU */
+        /* --- YATAY MOBİL OPTİMİZASYONU (YAN YANA YAPIYA GERİ DÖNÜŞ) --- */
         @media (max-height: 550px) {
             .modal-content {
                 height: 92vh;
                 width: 95vw;
-                padding: 60px 20px 20px 20px;
+                padding: 50px 20px 20px 20px;
                 justify-content: flex-start; 
             }
-            #modalBody {
-                margin: 0; 
-            }
-            .image-box {
-                height: 160px; 
-                width: auto;
-                max-width: 90%;
-                margin: 10px auto;
-            }
+            #modalBody { margin: 0; }
             .modal-content h2 {
                 font-size: 1.8rem;
+                margin-bottom: 15px;
             }
-            .modal-content p, .modal-content li {
+            
+            /* Yatay mobilde yan yana kalsın ki ekrana sığsın */
+            .content-wrapper {
+                flex-direction: row;
+                gap: 20px;
+            }
+            .image-box {
+                height: 60vh; 
+            }
+            .text-box p, .text-box ul {
                 font-size: 1.2rem;
+                padding: 15px;
             }
             .close-btn {
                 top: 10px;
@@ -318,62 +340,90 @@
         
         <div class="slide-data" data-title="1. Kapak" data-emoji="🌟">
             <h2>3D Yazıcılar Nasıl Çalışır?</h2>
-            <div class="image-box">
-                <img src="sunumResimler/1.jpg" alt="3D Yazıcı">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/1.jpg" alt="3D Yazıcı">
+                </div>
+                <div class="text-box">
+                    <p><strong>Hazırlayan: Toprak</strong> 👦🏻</p>
+                </div>
             </div>
-            <p><strong>Hazırlayan: Toprak</strong> 👦🏻</p>
         </div>
 
         <div class="slide-data" data-title="2. Nedir?" data-emoji="🤔">
             <h2>3D Yazıcı Nedir?</h2>
-            <div class="image-box">
-                <img src="sunumResimler/2.jpg" alt="3D Model">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/2.jpg" alt="3D Model">
+                </div>
+                <div class="text-box">
+                    <p>Bilgisayarda çizdiğimiz dijital tasarımları, dokunabildiğimiz gerçek nesnelere dönüştüren sihirli kutulardır.</p>
+                </div>
             </div>
-            <p>Bilgisayarda çizdiğimiz dijital tasarımları, dokunabildiğimiz gerçek nesnelere dönüştüren sihirli kutulardır.</p>
         </div>
 
         <div class="slide-data" data-title="3. Tasarım" data-emoji="💻">
             <h2>1. Adım: Hayal Et ve Çiz!</h2>
-            <div class="image-box">
-                <img src="sunumResimler/3.jpg" alt="3D Tasarım Programı">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/3.jpg" alt="3D Tasarım Programı">
+                </div>
+                <div class="text-box">
+                    <p>Her şey bilgisayarda bir 3D çizim ile başlar. Bunun için özel modelleme programları kullanılır.</p>
+                </div>
             </div>
-            <p>Her şey bilgisayarda bir 3D çizim ile başlar. Bunun için özel modelleme programları kullanılır.</p>
         </div>
 
         <div class="slide-data" data-title="4. Dilimleme" data-emoji="🍰">
             <h2>2. Adım: Dilimleme (Slicing)</h2>
-            <div class="image-box">
-                <img src="sunumResimler/4.jpg" alt="3D Dilimleme Yazılımı">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/4.jpg" alt="3D Dilimleme Yazılımı">
+                </div>
+                <div class="text-box">
+                    <p>Yazıcılar nesneleri tek seferde değil, <strong>katman katman</strong> inşa eder. Modeli bilgisayarda ince dilimlere ayırırız.</p>
+                </div>
             </div>
-            <p>Yazıcılar nesneleri tek seferde değil, <strong>katman katman</strong> inşa eder. Modeli bilgisayarda ince dilimlere ayırırız.</p>
         </div>
 
         <div class="slide-data" data-title="5. Baskı" data-emoji="⚙️">
             <h2>3. Adım: Üretim Başlıyor</h2>
-            <div class="image-box">
-                <img src="sunumResimler/5.jpg" alt="3D Yazıcı Ucu (Nozzle)">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/5.jpg" alt="3D Yazıcı Ucu (Nozzle)">
+                </div>
+                <div class="text-box">
+                    <ul>
+                        <li>Plastik ip (filament) ısıtılarak eritilir. 🔥</li>
+                        <li>Sıcak uç (nozul) erimiş plastiği masaya sürer.</li>
+                        <li>Plastik anında soğur ve nesne yükselir. 🏗️</li>
+                    </ul>
+                </div>
             </div>
-            <ul>
-                <li>Plastik ip (filament) ısıtılarak eritilir. 🔥</li>
-                <li>Sıcak uç (nozul) erimiş plastiği masaya sürer.</li>
-                <li>Plastik anında soğur ve nesne yükselir. 🏗️</li>
-            </ul>
         </div>
 
         <div class="slide-data" data-title="6. Örnekler" data-emoji="🚀">
             <h2>Neler Üretebiliriz?</h2>
-            <div class="image-box">
-                <img src="sunumResimler/6.jpg" alt="3D Baskı Oyuncaklar">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/6.jpg" alt="3D Baskı Oyuncaklar">
+                </div>
+                <div class="text-box">
+                    <p>Sınır hayal gücümüz! Oyuncaklar, robotlar, bozulan eşya parçaları ve hatta medikal protezler basılabilir.</p>
+                </div>
             </div>
-            <p>Sınır hayal gücümüz! Oyuncaklar, robotlar, bozulan eşya parçaları ve hatta medikal protezler basılabilir.</p>
         </div>
 
         <div class="slide-data" data-title="7. Teşekkürler" data-emoji="🎉">
             <h2>Beni Dinlediğiniz İçin Teşekkürler!</h2>
-            <div class="image-box">
-                <img src="sunumResimler/7.jpg" alt="Eğlenceli 3D Baskı Obje">
+            <div class="content-wrapper">
+                <div class="image-box">
+                    <img src="sunumResimler/7.jpg" alt="Eğlenceli 3D Baskı Obje">
+                </div>
+                <div class="text-box">
+                    <p><strong>Sorularınız var mı?</strong> 🙋‍♂️</p>
+                </div>
             </div>
-            <p><strong>Sorularınız var mı?</strong> 🙋‍♂️</p>
         </div>
 
     </template>
