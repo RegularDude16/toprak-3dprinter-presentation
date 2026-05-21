@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Yazıcılar Nasıl Çalışır? - Toprak</title>
     <style>
-        /* Türkçe desteği tam olan eğlenceli ve yuvarlak hatlı font: Fredoka */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
+        /* Türkçe desteği %100 kusursuz, yuvarlak hatlı, eğlenceli ve okunaklı font: Nunito */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap');
 
         body {
-            font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Nunito', 'Comic Sans MS', sans-serif;
             background-color: #dcb883; 
             background-image: 
                 radial-gradient(#c49e66 10%, transparent 11%),
@@ -33,7 +33,7 @@
             text-shadow: 3px 3px 0 #2f3542, -2px -2px 0 #2f3542, 2px -2px 0 #2f3542, -2px 2px 0 #2f3542, 2px 2px 0 #2f3542;
             letter-spacing: 2px;
             margin-bottom: 15px;
-            font-weight: 700;
+            font-weight: 900;
         }
 
         .header p {
@@ -43,7 +43,7 @@
             border: 3px solid #2f3542;
             border-radius: 25px;
             font-size: 1.3rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #3742fa;
             box-shadow: 4px 4px 0px #2f3542;
             transform: rotate(-1deg);
@@ -94,7 +94,7 @@
             margin: 0 0 10px 0;
             font-size: 1.6rem;
             text-shadow: 1px 1px 0px #2f3542;
-            font-weight: 600;
+            font-weight: 800;
         }
 
         .thumb-icon {
@@ -144,7 +144,7 @@
             font-size: 55px;
             color: #ff4757;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 900;
             transition: transform 0.2s;
             line-height: 1;
             text-shadow: 2px 2px 0px #2f3542;
@@ -168,7 +168,7 @@
             width: 65px;
             height: 65px;
             font-size: 30px;
-            font-weight: bold;
+            font-weight: 900;
             cursor: pointer;
             z-index: 1001;
             box-shadow: 4px 4px 0px #2f3542;
@@ -201,7 +201,6 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* Slaytlar arası geçişte animasyon hissi verir */
             animation: fadeIn 0.3s ease-in;
         }
 
@@ -217,7 +216,7 @@
             border-radius: 15px;
             transform: rotate(-1deg);
             display: inline-block;
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .content-wrapper {
@@ -268,7 +267,7 @@
             margin: 0;
             text-align: left;
             box-sizing: border-box;
-            font-weight: 500;
+            font-weight: 700;
         }
 
         .text-box ul {
@@ -299,10 +298,10 @@
             .header p { font-size: 1rem; }
             .modal-content {
                 width: 100vw;
-                height: 100vh; /* Mobilde tam ekran */
+                height: 100vh; 
                 border-radius: 0;
                 border: none;
-                padding: 60px 15px 100px 15px; /* Butonlara alt boşluk */
+                padding: 60px 15px 100px 15px; 
             }
             .modal-content h2 { font-size: 2rem; margin-bottom: 20px; }
             
@@ -325,7 +324,6 @@
                 font-size: 45px;
             }
             
-            /* Mobilde butonlar başparmak hizasında alt köşelere alınır */
             .nav-btn {
                 top: auto;
                 bottom: 20px;
@@ -370,7 +368,6 @@
                 right: 20px;
                 font-size: 40px;
             }
-            /* Yatay ekranda butonlar yanlarda kalsın ama biraz küçülsün */
             .nav-btn {
                 top: 50%;
                 bottom: auto;
@@ -504,7 +501,7 @@
         const modal = document.getElementById('myModal');
         const modalBody = document.getElementById('modalBody');
         
-        let currentSlideIndex = 0; // Hangi slaytta olduğumuzu takip etmek için eklendi
+        let currentSlideIndex = 0; 
 
         slides.forEach((slide, index) => {
             const thumbBox = document.createElement('div');
@@ -524,18 +521,15 @@
             grid.appendChild(thumbBox);
         });
 
-        // İlgili slaytı ekrana çizen fonksiyon
         function renderSlide(index) {
             modalBody.innerHTML = '';
             const slideContent = slides[index].cloneNode(true);
             modalBody.appendChild(slideContent);
             
-            // Slaytın en tepesine scroll yapması için
             const modalContentBox = document.querySelector('.modal-content');
             if (modalContentBox) modalContentBox.scrollTop = 0;
         }
 
-        // Ana ekrandan slayta tıklandığında çalışan fonksiyon
         function openModal(index) {
             currentSlideIndex = index;
             renderSlide(currentSlideIndex);
@@ -546,15 +540,12 @@
             }
         }
 
-        // Yön butonlarına tıklanınca çalışan fonksiyon
         function changeSlide(direction) {
-            // Animasyonu tetiklemek için mevcut içeriği anlık gizle
             modalBody.innerHTML = '';
             
             setTimeout(() => {
                 currentSlideIndex += direction;
                 
-                // Başa veya sona sarma mantığı
                 if (currentSlideIndex < 0) {
                     currentSlideIndex = slides.length - 1;
                 } else if (currentSlideIndex >= slides.length) {
@@ -562,7 +553,7 @@
                 }
                 
                 renderSlide(currentSlideIndex);
-            }, 50); // Çok kısa bir gecikme ile geçiş hissini artırır
+            }, 50); 
         }
 
         function closeModal() {
@@ -586,7 +577,6 @@
             }
         }
         
-        // KLAVYE YÖN TUŞLARI DESTEĞİ
         document.addEventListener('keydown', (event) => {
             if (modal.style.display === 'flex') {
                 if (event.key === 'Escape') closeModal();
