@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D Yazıcılar Nasıl Çalışır? - Toprak</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+        /* Türkçe desteği tam olan eğlenceli ve yuvarlak hatlı font: Fredoka */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap');
 
         body {
-            font-family: 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Fredoka', 'Comic Sans MS', cursive, sans-serif;
             background-color: #dcb883; 
             background-image: 
                 radial-gradient(#c49e66 10%, transparent 11%),
@@ -32,6 +33,7 @@
             text-shadow: 3px 3px 0 #2f3542, -2px -2px 0 #2f3542, 2px -2px 0 #2f3542, -2px 2px 0 #2f3542, 2px 2px 0 #2f3542;
             letter-spacing: 2px;
             margin-bottom: 15px;
+            font-weight: 700;
         }
 
         .header p {
@@ -41,7 +43,7 @@
             border: 3px solid #2f3542;
             border-radius: 25px;
             font-size: 1.3rem;
-            font-weight: bold;
+            font-weight: 600;
             color: #3742fa;
             box-shadow: 4px 4px 0px #2f3542;
             transform: rotate(-1deg);
@@ -92,6 +94,7 @@
             margin: 0 0 10px 0;
             font-size: 1.6rem;
             text-shadow: 1px 1px 0px #2f3542;
+            font-weight: 600;
         }
 
         .thumb-icon {
@@ -115,7 +118,7 @@
 
         .modal-content {
             background-color: #fff9e6;
-            width: 85vw;
+            width: 80vw;
             height: 85vh;
             border: 6px solid #2f3542;
             border-radius: 20px;
@@ -153,6 +156,36 @@
             color: #ff6b81;
         }
 
+        /* --- YÖN BUTONLARI (İLERİ/GERİ) --- */
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #3742fa;
+            color: white;
+            border: 4px solid #2f3542;
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            font-size: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 4px 4px 0px #2f3542;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .nav-btn:hover {
+            background-color: #535cfa;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev-btn { left: 30px; }
+        .next-btn { right: 30px; }
+
         #modalBody {
             margin: auto 0; 
             width: 100%;
@@ -168,6 +201,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            /* Slaytlar arası geçişte animasyon hissi verir */
+            animation: fadeIn 0.3s ease-in;
         }
 
         .modal-content h2 {
@@ -182,9 +217,9 @@
             border-radius: 15px;
             transform: rotate(-1deg);
             display: inline-block;
+            font-weight: 700;
         }
 
-        /* --- İKİ SÜTUNLU YAPI (MASAÜSTÜ İÇİN YENİ) --- */
         .content-wrapper {
             display: flex;
             flex-direction: row;
@@ -196,7 +231,7 @@
         }
 
         .image-box {
-            flex: 1; /* Sol sütun */
+            flex: 1; 
             height: 45vh;
             background-color: #ffffff;
             border: 5px dashed #ffa502;
@@ -216,7 +251,7 @@
         }
 
         .text-box {
-            flex: 1; /* Sağ sütun */
+            flex: 1; 
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -233,6 +268,7 @@
             margin: 0;
             text-align: left;
             box-sizing: border-box;
+            font-weight: 500;
         }
 
         .text-box ul {
@@ -252,18 +288,24 @@
             to { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* --- DİKEY MOBİL AYARLARI (ALT ALTA YAPI) --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- DİKEY MOBİL AYARLARI --- */
         @media (max-width: 768px) {
             .header h1 { font-size: 2.2rem; }
             .header p { font-size: 1rem; }
             .modal-content {
-                width: 95vw;
-                height: 90vh;
-                padding: 60px 15px 20px 15px;
+                width: 100vw;
+                height: 100vh; /* Mobilde tam ekran */
+                border-radius: 0;
+                border: none;
+                padding: 60px 15px 100px 15px; /* Butonlara alt boşluk */
             }
             .modal-content h2 { font-size: 2rem; margin-bottom: 20px; }
             
-            /* Mobilde alt alta geçiş */
             .content-wrapper {
                 flex-direction: column;
                 gap: 20px;
@@ -282,13 +324,30 @@
                 right: 20px;
                 font-size: 45px;
             }
+            
+            /* Mobilde butonlar başparmak hizasında alt köşelere alınır */
+            .nav-btn {
+                top: auto;
+                bottom: 20px;
+                transform: none;
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+            }
+            .nav-btn:hover {
+                transform: scale(1.1);
+            }
+            .prev-btn { left: 20px; }
+            .next-btn { right: 20px; }
         }
 
-        /* --- YATAY MOBİL OPTİMİZASYONU (YAN YANA YAPIYA GERİ DÖNÜŞ) --- */
+        /* --- YATAY MOBİL OPTİMİZASYONU --- */
         @media (max-height: 550px) {
             .modal-content {
-                height: 92vh;
-                width: 95vw;
+                height: 100vh;
+                width: 100vw;
+                border-radius: 0;
+                border: none;
                 padding: 50px 20px 20px 20px;
                 justify-content: flex-start; 
             }
@@ -297,15 +356,11 @@
                 font-size: 1.8rem;
                 margin-bottom: 15px;
             }
-            
-            /* Yatay mobilde yan yana kalsın ki ekrana sığsın */
             .content-wrapper {
                 flex-direction: row;
                 gap: 20px;
             }
-            .image-box {
-                height: 60vh; 
-            }
+            .image-box { height: 60vh; }
             .text-box p, .text-box ul {
                 font-size: 1.2rem;
                 padding: 15px;
@@ -315,6 +370,17 @@
                 right: 20px;
                 font-size: 40px;
             }
+            /* Yatay ekranda butonlar yanlarda kalsın ama biraz küçülsün */
+            .nav-btn {
+                top: 50%;
+                bottom: auto;
+                transform: translateY(-50%);
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
         }
     </style>
 </head>
@@ -329,6 +395,9 @@
         </div>
 
     <div id="myModal" class="modal">
+        <button class="nav-btn prev-btn" onclick="changeSlide(-1)" title="Önceki Slayt">&#10094;</button>
+        <button class="nav-btn next-btn" onclick="changeSlide(1)" title="Sonraki Slayt">&#10095;</button>
+
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal()" title="Kapat">&times;</span>
             <div id="modalBody">
@@ -434,6 +503,8 @@
         const grid = document.getElementById('grid');
         const modal = document.getElementById('myModal');
         const modalBody = document.getElementById('modalBody');
+        
+        let currentSlideIndex = 0; // Hangi slaytta olduğumuzu takip etmek için eklendi
 
         slides.forEach((slide, index) => {
             const thumbBox = document.createElement('div');
@@ -453,15 +524,45 @@
             grid.appendChild(thumbBox);
         });
 
-        function openModal(index) {
+        // İlgili slaytı ekrana çizen fonksiyon
+        function renderSlide(index) {
             modalBody.innerHTML = '';
             const slideContent = slides[index].cloneNode(true);
             modalBody.appendChild(slideContent);
+            
+            // Slaytın en tepesine scroll yapması için
+            const modalContentBox = document.querySelector('.modal-content');
+            if (modalContentBox) modalContentBox.scrollTop = 0;
+        }
+
+        // Ana ekrandan slayta tıklandığında çalışan fonksiyon
+        function openModal(index) {
+            currentSlideIndex = index;
+            renderSlide(currentSlideIndex);
             modal.style.display = 'flex';
             
             if (!history.state || !history.state.modalOpen) {
                 history.pushState({ modalOpen: true }, "");
             }
+        }
+
+        // Yön butonlarına tıklanınca çalışan fonksiyon
+        function changeSlide(direction) {
+            // Animasyonu tetiklemek için mevcut içeriği anlık gizle
+            modalBody.innerHTML = '';
+            
+            setTimeout(() => {
+                currentSlideIndex += direction;
+                
+                // Başa veya sona sarma mantığı
+                if (currentSlideIndex < 0) {
+                    currentSlideIndex = slides.length - 1;
+                } else if (currentSlideIndex >= slides.length) {
+                    currentSlideIndex = 0;
+                }
+                
+                renderSlide(currentSlideIndex);
+            }, 50); // Çok kısa bir gecikme ile geçiş hissini artırır
         }
 
         function closeModal() {
@@ -485,9 +586,12 @@
             }
         }
         
+        // KLAVYE YÖN TUŞLARI DESTEĞİ
         document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeModal();
+            if (modal.style.display === 'flex') {
+                if (event.key === 'Escape') closeModal();
+                else if (event.key === 'ArrowLeft') changeSlide(-1);
+                else if (event.key === 'ArrowRight') changeSlide(1);
             }
         });
     </script>
